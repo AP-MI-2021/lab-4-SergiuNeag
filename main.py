@@ -13,7 +13,7 @@ def print_menu():
     print("2. Afiseaza numere negative din lista : ")
     print("3. Afisarea celui mai mic numar care are ultima cifra egala cu k : ")
     print("4. Afisare superprime: ")
-    print("5. :")
+    print("5. Inlocuieste lista initiala cu Cmmdc pt >0 si cu inversul pt <0: ")
     print("6. iesire")
 
 
@@ -121,6 +121,88 @@ def test_afiseare_super_prim():
     assert afisare_super_prim([222, 31]) == [31]
 
 
+def gcd(my_list):
+    """
+    Determina cel mai mar divizor comun al numerelor din lista
+    :param my_list: Lista de numere pozitive
+    :return: Cel mai mare divizor comun al numerelor din lista
+    """
+    result = my_list[0]
+    for x in my_list[1:]:
+        if result < x:
+            temp = result
+            result = x
+            x = temp
+        while x != 0:
+            temp = x
+            x = result % x
+            result = temp
+    return result
+
+def test_gcd():
+    assert gcd([12,24,36]) == 12
+    assert gcd([5, 10, 20]) == 5
+    assert gcd([10, 10, 20]) == 10
+
+
+def lista_pozitive(lista):
+    """
+    Determina numerele pozitive din lista de numere
+    :param lista: Lista de numere intregi
+    :return: Numerele pozitive din lista
+    """
+    res = []
+    for i in lista:
+        if i > 0:
+            res.append(i)
+    return res
+
+
+def test_lista_pozitive():
+    assert lista_pozitive([1, 2, 3]) == [1, 2, 3]
+    assert lista_pozitive([1, 2, -3]) == [1, 2]
+    assert lista_pozitive([-1, -2, -3]) == []
+
+def reve(x):
+    """
+    Determina numarul neagativ cu cifrele invers
+    :param x: Numarul primit de functie
+    :return: Numarul negativ cu cifrele invers
+    """
+    x=str(x)
+    if x[0]=='-':
+        a=x[::-1]
+        return f"{x[0]}{a[:-1]}"
+
+
+def test_reve():
+    assert reve(-123) == "-321"
+    assert reve(-1) == "-1"
+    assert reve(-12) == "-21"
+
+
+def inlocuire_cu_cmmdc_inversul(lista):
+    """
+    Determina afișarea listei obținute din lista inițială în care numerele pozitive și nenule au fost înlocuite cu
+    CMMDC-ul lor și numerele negative au cifrele în ordine inversă.
+    :param lista: Lista de numere intregi
+    :return:Lista obtinuta din lista initiala in care numerele pozitive și nenule au fost înlocuite cu
+    CMMDC-ul lor și numerele negative au cifrele în ordine inversă.
+    """
+    res = []
+    l = lista_pozitive(lista)
+    cmmdc = gcd(l)
+    for i in lista:
+        if i > 0:
+            res.append(cmmdc)
+        else:
+            res.append(reve(i))
+    return res
+
+def test_inlocuire_cmmdc_inversul():
+    assert inlocuire_cu_cmmdc_inversul([12, 48, 24, -14, -16]) == [12, 12, 12, "-41", "-61"]
+    assert inlocuire_cu_cmmdc_inversul([10, 30, 50]) == [10, 10, 10]
+    assert inlocuire_cu_cmmdc_inversul([-16, 12]) == ["-61", 12]
 
 def main():
     lista = []
@@ -136,27 +218,10 @@ def main():
             print("Numarul cel mai mic cu ultima cifra egala cu k este: ", mic_cu_ultimak(lista, k))
         elif Optiune == 4:
             print("Elementele super prime din lista sunt :", afisare_super_prim(lista))
-
-
-def cmmdc(x):
-    """
-    Determina cel mai mar divizor comun al lui x
-    :param x: Numarul pentru care gasim cel mai mare divizor comun
-    :return: Cel mai mare divizor comun
-    """
-    pass
-
-
-def inlocuire_cu_cmmdc_inversul(lista):
-    """
-    Determina afișarea listei obținute din lista inițială în care numerele pozitive și nenule au fost înlocuite cu
-    CMMDC-ul lor și numerele negative au cifrele în ordine inversă.
-    :param lista: Lista de numere intregi
-    :return:Lista obtinuta din lista initiala in care numerele pozitive și nenule au fost înlocuite cu
-    CMMDC-ul lor și numerele negative au cifrele în ordine inversă.
-    """
-    res = []
-
+        elif Optiune == 5:
+            print("Lista inlocuita este: ", inlocuire_cu_cmmdc_inversul(lista))
+        elif Optiune == 6:
+            break
 
 
 
@@ -166,4 +231,8 @@ if __name__ == '__main__':
     testIsPrime()
     test_super_prim()
     test_afiseare_super_prim()
+    test_gcd()
+    test_lista_pozitive()
+    test_reve()
+    test_inlocuire_cmmdc_inversul()
     main()
